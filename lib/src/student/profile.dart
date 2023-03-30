@@ -30,18 +30,20 @@ class _profileState extends State<profile> {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _degreelevelController = TextEditingController();
+  final TextEditingController _skillsController = TextEditingController();
     bool read_Only=true;
   Future _getdata() async{
     
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? values= prefs.getStringList("profile",);
+    String? values= prefs.getString("studentId",);
     setState(() {
       isLoading = true;
     });
     try {
       
       var res =
-      await api.StudentLogin(values![0],values[1]);
+      await api.getStudentByid(values.toString(),);
+      // print(res);
        if(res['codeStatus'] == true){
         _firstNameController.text=res['data']['first_name'].toString();
         _lastNameController.text=res['data']['last_name'].toString();
@@ -49,6 +51,7 @@ class _profileState extends State<profile> {
         _phoneController.text=res['data']['phone'].toString();
         _universityController.text=res['data']['university'].toString();
         _majorController.text=res['data']['major'].toString();
+        _skillsController.text=res['data']['skills_and_experience'].toString();
         _dateofjoiningController.text=res['data']['date_of_join'].toString();
         _dobController.text=res['data']['dob'].toString();
         _countryController.text=res['data']['country'].toString();
@@ -83,6 +86,7 @@ class _profileState extends State<profile> {
        'major':_majorController.text,
         'date_of_join':_dateofjoiningController.text,
           'dob':_dobController.text,
+          'skills_and_experience':_skillsController.text,
         'country':_countryController.text,
           'city':_cityController.text,
             'degree_level':_degreelevelController.text,
@@ -160,6 +164,7 @@ read_Only=true;
                     rowViewCard(context,LANGUAGE=='ENGLISH'? 'Phone:':'هاتف', _phoneController.text),
                     rowViewCard(context, LANGUAGE=='ENGLISH'? 'University':'جامعة', _universityController.text),
                     rowViewCard(context, LANGUAGE=='ENGLISH'? 'Major':'رئيسي', _majorController.text),
+                    rowViewCard(context, LANGUAGE=='ENGLISH'? 'Skills And Experiance':'المهارات والخبرة', _skillsController.text),
                     rowViewCard(context,LANGUAGE=='ENGLISH'?'Degree Level':'مستوى الدرجة', _degreelevelController.text),
                     rowViewCard(context, LANGUAGE=='ENGLISH'? 'Date Of Joining':'تاريخ الالتحاق', _dateofjoiningController.text),
                     rowViewCard(context, LANGUAGE=='ENGLISH'?'DOB':'تاريخ الميلاد', _dobController.text),
@@ -178,6 +183,7 @@ read_Only=true;
                 // _buildTextField('Phone', Icons.email, _phoneController),
                 _buildTextField(LANGUAGE=='ENGLISH'? 'University':'جامعة', Icons.home_work, _universityController),
                 _buildTextField(LANGUAGE=='ENGLISH'? 'Major':'رئيسي', Icons.lock, _majorController),
+                _buildTextField(LANGUAGE=='ENGLISH'?'Skills And Experiance':'المهارات والخبرة', Icons.star, _skillsController),
                 _buildTextField(LANGUAGE=='ENGLISH'?'Degree Level':'مستوى الدرجة', Icons.lock, _degreelevelController,text: 'Degree Level'),
               _buildTextField(LANGUAGE=='ENGLISH'? 'Date Of Joining':'تاريخ الالتحاق', Icons.lock, _dateofjoiningController,text: 'Date Of Joining'),
               _buildTextField(LANGUAGE=='ENGLISH'?'DOB':'تاريخ الميلاد', Icons.lock, _dobController,text: 'DOB'),
@@ -388,7 +394,7 @@ Widget rowViewCard(context, String text1,String text2,{Color?color,double?fsize}
           width: MediaQuery.of(context).size.width*0.35,
           child: boldtext(color??Colors.black45, fsize??12,LANGUAGE=='ENGLISH'? text1:text2),
         ),SizedBox(
-          width: MediaQuery.of(context).size.width*0.45,child: Align(
+          width: MediaQuery.of(context).size.width*0.4,child: Align(
             alignment:LANGUAGE=='ENGLISH'?Alignment.centerLeft: Alignment.centerRight,
             child: boldtext(color??Colors.black45, fsize??12,LANGUAGE=='ENGLISH'? text2:text1))),
       ],

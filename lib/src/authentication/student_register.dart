@@ -30,6 +30,7 @@ class _StudentRegisterState extends State<StudentRegister> {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _degreelevelController = TextEditingController();
+  final TextEditingController _skillsController = TextEditingController();
 
 
   Future _register() async{
@@ -43,6 +44,7 @@ class _StudentRegisterState extends State<StudentRegister> {
           "first_name":_firstNameController.text,
           "last_name":_lastNameController.text,
           "email":_emailController.text,
+          'skills_and_experience':_skillsController.text,
           "phone":_phoneController.text,
           "password":_passwordController.text,
           "cpassword":_cpasswordController.text,
@@ -115,9 +117,9 @@ class _StudentRegisterState extends State<StudentRegister> {
                   _buildTextField(LANGUAGE=='ENGLISH'? 'Last Name':'اسم العائلة', Icons.email, _lastNameController),
                   _buildTextField(LANGUAGE=='ENGLISH'? 'Email':'بريد إلكتروني', Icons.email, _emailController),
                   _buildTextField(LANGUAGE=='ENGLISH'? 'Phone:':'هاتف', Icons.email, _phoneController),
-                  // _buildTextField(LANGUAGE=='ENGLISH'? 'Address':'عنوان', Icons.email, _addressController),
                   _buildTextField(LANGUAGE=='ENGLISH'? 'University':'جامعة', Icons.lock, _universityController),
                   _buildTextField(LANGUAGE=='ENGLISH'? 'Major':'رئيسي', Icons.lock, _majorController),
+                  _buildTextField(LANGUAGE=='ENGLISH'? 'Skills And Experiance':'المهارات والخبرة', Icons.star, _skillsController,text: 'skills'),
                   _buildTextField(LANGUAGE=='ENGLISH'? 'Date Of Joining':'تاريخ الالتحاق', Icons.lock, _dateofjoiningController,text: 'Date Of Joining'),
                 
                   _buildTextField(LANGUAGE=='ENGLISH'?'DOB':'تاريخ الميلاد', Icons.lock, _dobController,text: 'DOB'),
@@ -163,6 +165,7 @@ class _StudentRegisterState extends State<StudentRegister> {
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: TextField(
+        maxLines: text=='skills'?3:1,
         onTap: ()async {
           if (text=="City") {
            

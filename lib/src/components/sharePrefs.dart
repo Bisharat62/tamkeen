@@ -45,10 +45,10 @@ Future<void> saveProfileLoginDetails(List<String> value)async{
     prefs.setStringList("profile", value);
 
 }
-Future<void> saveUserProfileLoginDetails(List<String> value)async{
+Future<void> saveUserProfileLoginDetails(String value)async{
   //
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList("profile", value);
+    prefs.setString("studentId", value);
 
 }
 

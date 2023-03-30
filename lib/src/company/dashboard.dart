@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tamkeen_flu/src/company/view_applications.dart';
 import 'package:tamkeen_flu/src/components/globals.dart';
 import 'package:tamkeen_flu/src/settings.dart';
 
 import '../components/sharePrefs.dart';
+import 'add_position.dart';
 import 'my_students.dart';
 import 'profile.dart';
 import 'search_student.dart';
 import 'package:flutter/cupertino.dart';
+
 class CompanyDashboard extends StatefulWidget {
   const CompanyDashboard({Key? key}) : super(key: key);
 
@@ -22,11 +25,10 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
   // String? user_phone = '';
   Map userDetails = {};
   bool isLoading = false;
-   DateTime? currentBackPressTime;
+  DateTime? currentBackPressTime;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      
       onWillPop: () async {
         DateTime now = DateTime.now();
         if (currentBackPressTime == null ||
@@ -46,10 +48,17 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title:  Text(LANGUAGE=='ENGLISH'?'CompanyDashboard':'الشركة'),
+          title: Text(LANGUAGE == 'ENGLISH' ? 'CompanyDashboard' : 'الشركة'),
           automaticallyImplyLeading: false,
           actions: [
-            IconButton(onPressed: (){delete_prefs(context);}, icon:const Icon(Icons.logout_outlined,color: Colors.white,))
+            IconButton(
+                onPressed: () {
+                  delete_prefs(context);
+                },
+                icon: const Icon(
+                  Icons.logout_outlined,
+                  color: Colors.white,
+                ))
           ],
         ),
         body: SafeArea(
@@ -62,9 +71,11 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                       Text(
-                       LANGUAGE=='ENGLISH'? 'Welcome back!':'مرحبًا بعودتك!',
-                        style:const TextStyle(
+                      Text(
+                        LANGUAGE == 'ENGLISH'
+                            ? 'Welcome back!'
+                            : 'مرحبًا بعودتك!',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -83,15 +94,17 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
                 ),
               ),
               Expanded(
-                        flex: 3,
+                flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                       Text(
-                        LANGUAGE=='ENGLISH'? 'Quick Access':'الوصول السريع',
-                        style:const TextStyle(
+                      Text(
+                        LANGUAGE == 'ENGLISH'
+                            ? 'Quick Access'
+                            : 'الوصول السريع',
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -104,28 +117,71 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
                           crossAxisSpacing: 16,
                           children: <Widget>[
                             _buildQuickAccessCard(
-                               LANGUAGE=='ENGLISH'?'My Profile':'ملفي',
+                              LANGUAGE == 'ENGLISH' ? 'My Profile' : 'ملفي',
                               Icons.person,
                               Colors.orange,
-                                  () => Navigator.push(context, MaterialPageRoute(builder: ((context) => const ProfileCompany()))),
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const ProfileCompany()))),
                             ),
                             _buildQuickAccessCard(
-                              LANGUAGE=='ENGLISH'?'My Students':'طلابي',
+                              LANGUAGE == 'ENGLISH' ? 'My Students' : 'طلابي',
                               Icons.shopping_cart,
                               Colors.green,
-                                  () => Navigator.push(context, MaterialPageRoute(builder: ((context) => const MyStudents()))),
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const MyStudents()))),
                             ),
                             _buildQuickAccessCard(
-                             LANGUAGE=='ENGLISH'? 'Search Students':'البحث عن الطلاب',
+                              LANGUAGE == 'ENGLISH'
+                                  ? 'Search Students'
+                                  : 'البحث عن الطلاب',
                               Icons.message,
                               Colors.blue,
-                                  () => Navigator.push(context, MaterialPageRoute(builder: ((context) => const SearchStudent()))),
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const SearchStudent()))),
                             ),
                             _buildQuickAccessCard(
-                             LANGUAGE=='ENGLISH'?  'Settings':'إعدادات',
+                              LANGUAGE == 'ENGLISH'
+                                  ? 'Add Position'
+                                  : "أضف الوظيفة",
+                              Icons.add_box_sharp,
+                              Colors.lime,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const AddPositionScreen()))),
+                            ),
+                            _buildQuickAccessCard(
+                              LANGUAGE == 'ENGLISH'
+                                  ? 'Applications'
+                                  : "التطبيقات",
+                              Icons.format_list_bulleted_outlined,
+                              Colors.blueGrey,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const ViewApplication()))),
+                            ),
+                            _buildQuickAccessCard(
+                              LANGUAGE == 'ENGLISH' ? 'Settings' : 'إعدادات',
                               Icons.settings,
                               Colors.purple,
-                                  () => Navigator.push(context, MaterialPageRoute(builder: ((context) => const SettingsScreen()))).then((value) => setState(() {})),
+                              () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              const SettingsScreen())))
+                                  .then((value) => setState(() {})),
                             ),
                           ],
                         ),
@@ -143,7 +199,6 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
 
   Widget _buildRequestButton() {
     return MaterialButton(
-
       minWidth: 200.0,
       height: 50.0,
       color: Colors.white,
@@ -158,7 +213,9 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
       ),
     );
   }
-  Widget _buildQuickAccessCard(String title, IconData icon, Color color, VoidCallback onTap) {
+
+  Widget _buildQuickAccessCard(
+      String title, IconData icon, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -194,7 +251,7 @@ class _CompanyDashboardState extends State<CompanyDashboard> {
   //   setState(() {});
   // }
 
-  _showSnack(String message){
+  _showSnack(String message) {
     final snackBar = SnackBar(
       content: Text(message),
     );

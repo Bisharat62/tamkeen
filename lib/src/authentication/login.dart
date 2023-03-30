@@ -74,7 +74,8 @@ Future _loginCompany()async{
       if(res['codeStatus'] == true){
         _showSnack(LANGUAGE=='ENGLISH'?"login successfully":'تسجيل الدخول بنجاح');
         saveUserLoginDetails(res['data']['id'],res['data']['first_name'],res['data']['email'],res['data']['phone'],res['data']['account_type'],"student");
-        saveUserProfileLoginDetails([email,password]);
+        
+        saveUserProfileLoginDetails(res['data']['id'].toString());
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: ((context) => const studentDashboard())));
       }else{

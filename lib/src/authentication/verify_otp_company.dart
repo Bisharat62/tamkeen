@@ -5,10 +5,14 @@ import 'package:tamkeen_flu/src/authentication/login.dart';
 import 'package:tamkeen_flu/src/authentication/resetpassword.dart';
 import 'package:flutter/cupertino.dart';
 import '../../api.dart';
+import '../company/dashboard.dart';
+import '../components/sharePrefs.dart';
 class VerifyOtpCompany extends StatefulWidget {
   final user_id;
   bool?isForgot;
-   VerifyOtpCompany({Key? key, required this.user_id,this.isForgot}) : super(key: key);
+  bool? isLoginWithotp;
+  dynamic res;
+   VerifyOtpCompany({Key? key, required this.user_id,this.isForgot,this.isLoginWithotp,this.res}) : super(key: key);
 
   @override
   State<VerifyOtpCompany> createState() => _VerifyOtpCompanyState();
@@ -23,14 +27,21 @@ class _VerifyOtpCompanyState extends State<VerifyOtpCompany> {
     });
     String _otp = _otpController.text;
     try {
-      var res =
+      var res =widget.isLoginWithotp==true?await api.CompanytVerifyOtpLogin(widget.user_id.toString(),_otp.toString()):
       await api.CompanytVerify(widget.user_id.toString(),_otp.toString());
       print(res);
       if(res['codeStatus'] == true){
         _showSnack(res['message']);
+        if (widget.isLoginWithotp==true) {
+          
+        saveUserLoginDetails(widget.res['data']['id'],widget.res['data']['name'],widget.res['data']['email'],widget.res['data']['phone'],
+        widget.res['data']['status'],"company");
+        await saveProfileLoginDetails([widget.res['data']['name'].toString(),widget.res['data']['website_address'].toString(),widget.res['data']['country'].toString()
+        ,widget.res['data']['city'].toString(),widget.res['data']['phone'].toString(),widget.res['data']['email'].toString(),widget.res['data']['address'].toString()]);
+        }
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) =>widget.isForgot==true?ResetPassword(isCompany: true,) :CommonLogin(isCompany: true,)),
+          MaterialPageRoute(builder: (context) =>widget.isLoginWithotp==true?CompanyDashboard() :widget.isForgot==true?ResetPassword(isCompany: true,) :CommonLogin(isCompany: true,)),
         );
       }else{
         _showSnack(res['message']);
@@ -45,15 +56,10 @@ class _VerifyOtpCompanyState extends State<VerifyOtpCompany> {
       });
       _showSnack('HTTP ERROR');
     }
-
-    // goToSinup(){
-
-    // }
-
-    // Do something with the email and password values
   }
   @override
   Widget build(BuildContext context) {
+    print(widget.res);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

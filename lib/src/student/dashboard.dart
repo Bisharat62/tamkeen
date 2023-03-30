@@ -3,13 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tamkeen_flu/src/company/dashboard.dart';
 import '../../api.dart';
 import '../components/globals.dart';
 import '../components/sharePrefs.dart';
 import '../settings.dart';
+import 'allpositions.dart';
+import 'aplication_status.dart';
 import 'mycompany/my_companies.dart';
 import 'profile.dart';
 import 'searchcompany/search_company.dart';
+
 class studentDashboard extends StatefulWidget {
   const studentDashboard({Key? key}) : super(key: key);
 
@@ -19,14 +23,14 @@ class studentDashboard extends StatefulWidget {
 
 class _studentDashboardState extends State<studentDashboard> {
   //   Future _getdata() async{
-    
+
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   List<String>? values= prefs.getStringList("profile",);
   //   setState(() {
   //     isLoading = true;
   //   });
   //   try {
-      
+
   //     var res =
   //     await api.StudentLogin(values![0],values[1]);
   //      if(res['codeStatus'] == true){
@@ -45,16 +49,15 @@ class _studentDashboardState extends State<studentDashboard> {
   // String? user_phone = '';
   Map userDetails = {};
   bool isLoading = false;
-  Future _requestForVip() async{
+  Future _requestForVip() async {
     setState(() {
       isLoading = true;
     });
     try {
-      var res =
-      await api.StudentRequestVip(USER_ID.toString());
-      if(res['codeStatus'] == true){
+      var res = await api.StudentRequestVip(USER_ID.toString());
+      if (res['codeStatus'] == true) {
         _showSnack(res['message']);
-      }else{
+      } else {
         _showSnack(res['message']);
       }
       setState(() {
@@ -68,22 +71,20 @@ class _studentDashboardState extends State<studentDashboard> {
     }
   }
 
-  Future _check_is_vip() async{
+  Future _check_is_vip() async {
     setState(() {
       isLoading = true;
     });
     try {
-      var res =
-      await api.getStudentByid(USER_ID.toString());
+      var res = await api.getStudentByid(USER_ID.toString());
       print(res);
-      if(res['codeStatus'] == true){
+      if (res['codeStatus'] == true) {
         userDetails = res['data'];
         setState(() {
-          
-        ACCOUNT_TYPE=res['data']['account_type'];
+          ACCOUNT_TYPE = res['data']['account_type'];
         });
         // print(userDetails);
-      }else{
+      } else {
         _showSnack('NO User Found');
       }
       setState(() {
@@ -98,21 +99,23 @@ class _studentDashboardState extends State<studentDashboard> {
     }
   }
 
-
-   DateTime? currentBackPressTime;
+  DateTime? currentBackPressTime;
   @override
   void initState() {
     // getdata();
-    
+
     _check_is_vip();
   }
+
   @override
-  Widget build(BuildContext context) {print(ACCOUNT_TYPE);
+  Widget build(BuildContext context) {
+    print(ACCOUNT_TYPE);
     return WillPopScope(
       onWillPop: () async {
         DateTime now = DateTime.now();
         if (currentBackPressTime == null ||
-            now.difference(currentBackPressTime!) > const Duration(seconds: 3)) {
+            now.difference(currentBackPressTime!) >
+                const Duration(seconds: 3)) {
           currentBackPressTime = now;
           const snack = SnackBar(
             backgroundColor: Colors.red,
@@ -128,11 +131,18 @@ class _studentDashboardState extends State<studentDashboard> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title:  Text(LANGUAGE=='ENGLISH'? 'Dashboard':'لوحة القيادة'),
+          title: Text(LANGUAGE == 'ENGLISH' ? 'Dashboard' : 'لوحة القيادة'),
           automaticallyImplyLeading: false,
-            actions: [
-              IconButton(onPressed: (){delete_prefs(context);}, icon:const Icon(Icons.logout_outlined,color: Colors.white,))
-            ],
+          actions: [
+            IconButton(
+                onPressed: () {
+                  delete_prefs(context);
+                },
+                icon: const Icon(
+                  Icons.logout_outlined,
+                  color: Colors.white,
+                ))
+          ],
         ),
         body: SafeArea(
           child: Column(
@@ -144,9 +154,11 @@ class _studentDashboardState extends State<studentDashboard> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                       Text(
-                       LANGUAGE=='ENGLISH'? 'Welcome back!':'مرحبًا بعودتك!',
-                        style:const TextStyle(
+                      Text(
+                        LANGUAGE == 'ENGLISH'
+                            ? 'Welcome back!'
+                            : 'مرحبًا بعودتك!',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -161,21 +173,25 @@ class _studentDashboardState extends State<studentDashboard> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                     ACCOUNT_TYPE=="1"?const SizedBox.shrink(): _buildRequestButton()
+                      ACCOUNT_TYPE == "1"
+                          ? const SizedBox.shrink()
+                          : _buildRequestButton()
                     ],
                   ),
                 ),
               ),
               Expanded(
-                        flex: 3,
+                flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                       Text(
-                        LANGUAGE=='ENGLISH'? 'Quick Access':"الوصول السريع",
-                        style:const TextStyle(
+                      Text(
+                        LANGUAGE == 'ENGLISH'
+                            ? 'Quick Access'
+                            : "الوصول السريع",
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -188,37 +204,79 @@ class _studentDashboardState extends State<studentDashboard> {
                           crossAxisSpacing: 16,
                           children: <Widget>[
                             _buildQuickAccessCard(
-                             LANGUAGE=='ENGLISH'? 'My Profile':'ملفي',
+                              LANGUAGE == 'ENGLISH' ? 'My Profile' : 'ملفي',
                               Icons.person,
                               Colors.orange,
-                                  () => Navigator.push(context, MaterialPageRoute(builder: ((context) => const profile()))),
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) => const profile()))),
                             ),
                             _buildQuickAccessCard(
-                              LANGUAGE=='ENGLISH'?'My Company':'شركتي',
-                              Icons.shopping_cart,
-                              Colors.green,
-                                  () {
-                                    if (ACCOUNT_TYPE!='1') {
-                                      
-                                    _check_is_vip();
-                                    }
-                                   (ACCOUNT_TYPE == '1') ? Navigator.push(context, MaterialPageRoute(builder: ((context) => const myCompanies()))) : _showSnack('Need VIP ACCOUNT');}
+                                LANGUAGE == 'ENGLISH' ? 'My Company' : 'شركتي',
+                                Icons.shopping_cart,
+                                Colors.green, () {
+                              if (ACCOUNT_TYPE != '1') {
+                                _check_is_vip();
+                              }
+                              (ACCOUNT_TYPE == '1')
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              const myCompanies())))
+                                  : _showSnack('Need VIP ACCOUNT');
+                            }),
+                            _buildQuickAccessCard(
+                                LANGUAGE == 'ENGLISH'
+                                    ? 'Search Company'
+                                    : "البحث عن شركة",
+                                Icons.message,
+                                Colors.blue, () {
+                              if (ACCOUNT_TYPE != '1') {
+                                _check_is_vip();
+                              }
+                              (ACCOUNT_TYPE == '1')
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              const SearchCompany())))
+                                  : _showSnack('Need VIP ACCOUNT');
+                            }),
+                            _buildQuickAccessCard(
+                              LANGUAGE == 'ENGLISH'
+                                  ? 'View Position'
+                                  : "مشاهدة الوظيفة",
+                              Icons.add_box_sharp,
+                              Colors.lime,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const AllPositions()))),
                             ),
                             _buildQuickAccessCard(
-                             LANGUAGE=='ENGLISH'? 'Search Company':"البحث عن شركة",
-                              Icons.message,
-                              Colors.blue,
-                                  () {
-                                    if (ACCOUNT_TYPE!='1') {
-                                    _check_is_vip();
-                                    }
-                                    (ACCOUNT_TYPE == '1') ? Navigator.push(context, MaterialPageRoute(builder: ((context) => const SearchCompany()))) : _showSnack('Need VIP ACCOUNT');}
+                              LANGUAGE == 'ENGLISH'
+                                  ? 'Applications'
+                                  : "التطبيقات",
+                              Icons.format_list_bulleted_outlined,
+                              Colors.blueGrey,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const ApplicationStatus()))),
                             ),
                             _buildQuickAccessCard(
-                             LANGUAGE=='ENGLISH'?  'Settings':'إعدادات',
+                              LANGUAGE == 'ENGLISH' ? 'Settings' : 'إعدادات',
                               Icons.settings,
                               Colors.purple,
-                                  () => Navigator.push(context, MaterialPageRoute(builder: ((context) => const SettingsScreen()))),
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const SettingsScreen()))),
                             ),
                           ],
                         ),
@@ -236,14 +294,13 @@ class _studentDashboardState extends State<studentDashboard> {
 
   Widget _buildRequestButton() {
     return MaterialButton(
-
       minWidth: 200.0,
       height: 50.0,
       color: Colors.white,
       onPressed: _requestForVip,
-      child:  Text(
-      LANGUAGE=='ENGLISH'?   'Request For VIP':'طلب VIP',
-        style:const TextStyle(
+      child: Text(
+        LANGUAGE == 'ENGLISH' ? 'Request For VIP' : 'طلب VIP',
+        style: const TextStyle(
           color: Colors.teal,
           fontSize: 20.0,
           fontWeight: FontWeight.bold,
@@ -251,7 +308,9 @@ class _studentDashboardState extends State<studentDashboard> {
       ),
     );
   }
-  Widget _buildQuickAccessCard(String title, IconData icon, Color color, VoidCallback onTap) {
+
+  Widget _buildQuickAccessCard(
+      String title, IconData icon, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -287,11 +346,10 @@ class _studentDashboardState extends State<studentDashboard> {
   //   setState(() {});
   // }
 
-  _showSnack(String message){
+  _showSnack(String message) {
     final snackBar = SnackBar(
       content: Text(message),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-
 }

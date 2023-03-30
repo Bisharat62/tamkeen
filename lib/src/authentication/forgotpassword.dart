@@ -36,7 +36,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         USER_ID= res['data']['id'];
         isLoading=false;
       });
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>widget.isCompany==true? VerifyOtpCompany(user_id: USER_ID,isForgot: true,):verifyOtp(user_id:USER_ID)));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>widget.isCompany==true? VerifyOtpCompany(user_id: USER_ID,isForgot: true,):verifyOtp(user_id:USER_ID,isForgot: true,)));
       }else{
           showInSnackBar('${res['message']}',color: Colors.red);
       setState(() {

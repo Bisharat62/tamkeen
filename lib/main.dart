@@ -7,7 +7,7 @@ import 'package:tamkeen_flu/src/helpers/globalSnackbar.dart';
 
 void main() {
   runApp(const MyApp());
-}
+} 
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
